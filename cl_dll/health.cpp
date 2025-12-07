@@ -532,7 +532,15 @@ int CHudHealth::MsgFunc_HealthInfo( const char *pszName, int iSize, void *buf )
 	int health = reader.ReadLong();
 
 	if ( idx < MAX_PLAYERS )
+	{
 		g_PlayerExtraInfo[idx].sb_health = health;
+		
+		// Update local player's HUD health
+		if ( g_PlayerInfoList[idx].thisplayer && health > 255 )
+		{
+			m_iHealth = health;
+		}
+	}
 
 	return 1;
 }
