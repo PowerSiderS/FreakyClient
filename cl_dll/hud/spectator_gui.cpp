@@ -288,7 +288,7 @@ void CHudSpectatorGui::CalcAllNeededData( )
 		GetPlayerInfo( g_iUser2, &sInfo );
 
 		snprintf( label.m_szNameAndHealth, sizeof( label.m_szNameAndHealth ),
-				  "%s (%i)",  sInfo.name, g_PlayerExtraInfo[g_iUser2].health );
+				  "%s (%i)",  sInfo.name, g_PlayerExtraInfo[g_iUser2].sb_health );
 	}
 	else label.m_szNameAndHealth[0] = '\0';
 }
