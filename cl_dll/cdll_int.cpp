@@ -22,7 +22,7 @@
 #include "cl_util.h"
 #include "netadr.h"
 #include "pmtrace.h"
-
+#include "inspect.h"
 #include "pm_shared.h"
 
 #include <string.h>
@@ -244,7 +244,8 @@ returns 1 if anything has been changed, 0 otherwise.
 int DLLEXPORT HUD_UpdateClientData(client_data_t *pcldata, float flTime )
 {
 	IN_Commands();
-
+	Inspect_Think();
+	
 	return gHUD.UpdateClientData(pcldata, flTime );
 }
 
