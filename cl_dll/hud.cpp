@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "parsemsg.h"
-
+#include "inspect.h"
 #include "demo.h"
 #include "demo_api.h"
 #include "vgui_parser.h"
@@ -351,7 +351,7 @@ void CHud :: Init( void )
 	m_szServerName[0] = 0;
 
 
-
+    Inspect_Init();
 	Localize_Init();
 
 	// fullscreen overlays
