@@ -6,3 +6,5 @@
 • **KilFeed Added (Just Rectangle Draw)**
 
 • **255HP+ Support *(Thx To iQuit & BariscodeFX)***
+
+• **Added Manual Inspection!**
