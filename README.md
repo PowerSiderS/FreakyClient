@@ -4,3 +4,5 @@
 • **Added FOV ViewModel With Limits**
 
 • **KilFeed Added (Just Rectangle Draw)**
+
+• **255HP+ Support *(Thx To iQuit & BariscodeFX)***
