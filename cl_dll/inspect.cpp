@@ -55,36 +55,36 @@ static void SetInspectTime(studiohdr_t *hdr, int seq)
 static int g_inspectAnims[] =
 {
         0,     /* WEAPON_NONE */
-        6,     /* WEAPON_P228 */
-        12,    /* WEAPON_GLOCK */
-        4,     /* WEAPON_SCOUT */
+        7,     /* WEAPON_P228 */
+        13,    /* WEAPON_GLOCK */
+        5,     /* WEAPON_SCOUT */
         0,     /* WEAPON_HEGRENADE */
-        5,     /* WEAPON_XM1014 */
+        6,     /* WEAPON_XM1014 */
         0,     /* WEAPON_C4 */
-        5,     /* WEAPON_MAC10 */
-        5,     /* WEAPON_AUG */
+        6,     /* WEAPON_MAC10 */
+        6,     /* WEAPON_AUG */
         0,     /* WEAPON_SMOKEGRENADE */
-        15,    /* WEAPON_ELITE */
-        5,     /* WEAPON_FIVESEVEN */
-        5,     /* WEAPON_UMP45 */
-        4,     /* WEAPON_SG550 */
-        5,     /* WEAPON_GALIL */
-        5,     /* WEAPON_FAMAS */
+        16,    /* WEAPON_ELITE */
+        6,     /* WEAPON_FIVESEVEN */
+        6,     /* WEAPON_UMP45 */
+        5,     /* WEAPON_SG550 */
+        6,     /* WEAPON_GALIL */
+        6,     /* WEAPON_FAMAS */
         15,    /* WEAPON_USP */
         12,    /* WEAPON_GLOCK18 */
         6,     /* WEAPON_AWP */
-        5,     /* WEAPON_MP5N */
-        4,     /* WEAPON_M249 */
-        6,     /* WEAPON_M3 */
+        6,     /* WEAPON_MP5N */
+        5,     /* WEAPON_M249 */
+        7,     /* WEAPON_M3 */
         13,    /* WEAPON_M4A1 */
-        5,     /* WEAPON_TMP */
-        4,     /* WEAPON_G3SG1 */
+        6,     /* WEAPON_TMP */
+        5,     /* WEAPON_G3SG1 */
         0,     /* WEAPON_FLASHBANG */
         5,     /* WEAPON_DEAGLE */
-        5,     /* WEAPON_SG552 */
+        6,     /* WEAPON_SG552 */
         6,     /* WEAPON_AK47 */
         0,     /* WEAPON_KNIFE */
-        5,     /* WEAPON_P90 */
+        6,     /* WEAPON_P90 */
 };
 
 static int LookupInspect(int curSequence, int weaponID)
