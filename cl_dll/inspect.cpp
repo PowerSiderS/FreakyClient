@@ -329,6 +329,14 @@ static bool IsShootingSequence(int seq, int weaponID)
                         return (seq >= AK47_SHOOT1 && seq <= AK47_SHOOT3);
                 case WEAPON_P90:
                         return (seq >= P90_SHOOT1 && seq <= P90_SHOOT3);
+                case WEAPON_HEGRENADE:
+                        return seq == HEGRENADE_THROW || seq== HEGRENADE_PULLPIN;
+                case WEAPON_FLASHBANG:
+                        return seq == FLASHBANG_THROW || seq == FLASHBANG_PULLPIN;
+                case WEAPON_SMOKEGRENADE:
+                        return seq == SMOKEGRENADE_THROW || seq == SMOKEGRENADE_PINPULL;
+                case WEAPON_C4:
+                        return seq == C4_ARM;
         }
         return false;
 }
@@ -388,6 +396,14 @@ static bool IsDrawingSequence(int seq, int weaponID)
                         return seq == AK47_DRAW;
                 case WEAPON_P90:
                         return seq == P90_DRAW;
+                case WEAPON_HEGRENADE:
+                        return seq == HEGRENADE_DRAW;
+                case WEAPON_FLASHBANG:
+                        return seq == FLASHBANG_DRAW;
+                case WEAPON_SMOKEGRENADE:
+                        return seq == SMOKEGRENADE_DRAW;
+                case WEAPON_C4:
+                        return seq == C4_DRAW;
         }
         return false;
 }
