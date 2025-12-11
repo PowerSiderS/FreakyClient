@@ -8,3 +8,5 @@
 • **255HP+ Support *(Thx To iQuit & BariscodeFX)***
 
 • **Added Manual Inspection!**
+
+• **Added Gyroscope Feature!** Fixed By NaruTo 1.6
