@@ -1,10 +1,10 @@
 /***
 *
-*	Copyright (c) 1996-2002, Valve LLC. All rights reserved.
-*	
-*	This product contains software technology licensed from Id 
-*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
-*	All Rights Reserved.
+*       Copyright (c) 1996-2002, Valve LLC. All rights reserved.
+*       
+*       This product contains software technology licensed from Id 
+*       Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
+*       All Rights Reserved.
 *
 *   Use, distribution, and modification of this source code and/or resulting
 *   object code is restricted to non-commercial enhancements to products from
@@ -25,115 +25,148 @@
 
 int CHudBattery::Init( void )
 {
-	m_iBat = 0;
-	m_fFade = 0;
-	m_iFlags = 0;
-	m_enArmorType = Vest;
+        m_iBat = 0;
+        m_flDisplayBat = 0.0f;
+        m_fFade = 0;
+        m_iFlags = 0;
+        m_enArmorType = Vest;
 
-	HOOK_MESSAGE( gHUD.m_Battery, Battery );
-	HOOK_MESSAGE( gHUD.m_Battery, ArmorType );
-	gHUD.AddHudElem( this );
+        HOOK_MESSAGE( gHUD.m_Battery, Battery );
+        HOOK_MESSAGE( gHUD.m_Battery, ArmorType );
+        cl_armor_transition = CVAR_CREATE("cl_armor_transition", "1", FCVAR_ARCHIVE);
+        cl_armor_transition_speed = CVAR_CREATE("cl_armor_transition_speed", "10", FCVAR_ARCHIVE);
+        gHUD.AddHudElem( this );
 
-	return 1;
+        return 1;
 }
 
 int CHudBattery::VidInit( void )
 {
-	m_hEmpty[Vest].SetSpriteByName("suit_empty");
-	m_hFull[Vest].SetSpriteByName("suit_full");
-	m_hEmpty[VestHelm].SetSpriteByName("suithelmet_empty");
-	m_hFull[VestHelm].SetSpriteByName("suithelmet_full");
+        m_hEmpty[Vest].SetSpriteByName("suit_empty");
+        m_hFull[Vest].SetSpriteByName("suit_full");
+        m_hEmpty[VestHelm].SetSpriteByName("suithelmet_empty");
+        m_hFull[VestHelm].SetSpriteByName("suithelmet_full");
 
-	m_iHeight = m_hFull[Vest].rect.Height();
-	m_fFade = 0;
+        m_iHeight = m_hFull[Vest].rect.Height();
+        m_fFade = 0;
+        m_flDisplayBat = (float)m_iBat;
 
-	return 1;
+        return 1;
 }
 
 
 int CHudBattery:: MsgFunc_Battery(const char *pszName, int iSize, void *pbuf )
 {
-	BufferReader reader( pszName, pbuf, iSize );
+        BufferReader reader( pszName, pbuf, iSize );
 
-	m_iFlags |= HUD_DRAW;
-	int x = reader.ReadShort();
+        m_iFlags |= HUD_DRAW;
+        int x = reader.ReadShort();
 
-	if( x != m_iBat )
-	{
-		m_fFade = FADE_TIME;
-		m_iBat = x;
-		if( m_iBat < 0 )
-			m_enArmorType = Vest;
-	}
+        if( x != m_iBat )
+        {
+                m_fFade = FADE_TIME;
+                m_iBat = x;
+                if( m_iBat < 0 )
+                        m_enArmorType = Vest;
+        }
 
-	return 1;
+        return 1;
 }
 
 int CHudBattery::Draw( float flTime )
 {
-	if( gHUD.m_iHideHUDDisplay & HIDEHUD_HEALTH )
-		return 1;
+        if( gHUD.m_iHideHUDDisplay & HIDEHUD_HEALTH )
+                return 1;
 
-	if (!(gHUD.m_iWeaponBits & (1<<(WEAPON_SUIT)) ))
-		return 1;
+        if (!(gHUD.m_iWeaponBits & (1<<(WEAPON_SUIT)) ))
+                return 1;
 
-	int r, g, b, x, y, a;
-	wrect_t rc;
+        int r, g, b, x, y, a;
+        wrect_t rc;
 
-	rc = m_hEmpty[m_enArmorType].rect;
+        if (cl_armor_transition && cl_armor_transition->value > 0)
+        {
+                float flTarget = (float)m_iBat;
+                float flSpeed = cl_armor_transition_speed ? cl_armor_transition_speed->value : 10.0f;
+                
+                if (flSpeed < 1.0f) flSpeed = 1.0f;
+                if (flSpeed > 100.0f) flSpeed = 100.0f;
+                
+                float flDelta = flTarget - m_flDisplayBat;
+                float flStep = flDelta * gHUD.m_flTimeDelta * flSpeed;
+                
+                if (fabs(flDelta) < 0.5f)
+                {
+                        m_flDisplayBat = flTarget;
+                }
+                else
+                {
+                        m_flDisplayBat += flStep;
+                }
+                
+                if (m_flDisplayBat < 0) m_flDisplayBat = 0;
+        }
+        else
+        {
+                m_flDisplayBat = (float)m_iBat;
+        }
 
-	// battery can go from 0 to 100 so * 0.01 goes from 0 to 1
-	rc.top += m_iHeight * ((float)( 100 - ( min( 100, m_iBat ))) * 0.01f );
+        int iDisplayBat = (int)(m_flDisplayBat + 0.5f);
 
-	DrawUtils::UnpackRGB( r, g, b, gHUD.m_iDefaultHUDColor );
+        rc = m_hEmpty[m_enArmorType].rect;
 
-	// Has health changed? Flash the health #
-	if( m_fFade )
-	{
-		if( m_fFade > FADE_TIME )
-			m_fFade = FADE_TIME;
+        // battery can go from 0 to 100 so * 0.01 goes from 0 to 1
+        rc.top += m_iHeight * ((float)( 100 - ( min( 100, iDisplayBat ))) * 0.01f );
 
-		m_fFade -= (gHUD.m_flTimeDelta * 20);
+        DrawUtils::UnpackRGB( r, g, b, gHUD.m_iDefaultHUDColor );
 
-		if( m_fFade <= 0 )
-		{
-			m_fFade = 0;
-		}
+        // Has health changed? Flash the health #
+        if( m_fFade )
+        {
+                if( m_fFade > FADE_TIME )
+                        m_fFade = FADE_TIME;
 
-		// Fade the health number back to dim
-		a = MIN_ALPHA +  (m_fFade / FADE_TIME) * 128;
-	}
-	else
-	{
-		a = MIN_ALPHA;
-	}
+                m_fFade -= (gHUD.m_flTimeDelta * 20);
 
-	DrawUtils::ScaleColors( r, g, b, a );
-	
-	y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
-	x = ScreenWidth / 5;
+                if( m_fFade <= 0 )
+                {
+                        m_fFade = 0;
+                }
 
-	// make sure we have the right sprite handles
-	SPR_Set( m_hFull[m_enArmorType].spr, r, g, b );
-	SPR_DrawAdditive( 0, x, y, &m_hFull[m_enArmorType].rect );
+                // Fade the health number back to dim
+                a = MIN_ALPHA +  (m_fFade / FADE_TIME) * 128;
+        }
+        else
+        {
+                a = MIN_ALPHA;
+        }
 
-	if( rc.bottom > rc.top )
-	{
-		SPR_Set( m_hEmpty[m_enArmorType].spr, r, g, b );
-		SPR_DrawAdditive( 0, x, y + (rc.top - m_hEmpty[m_enArmorType].rect.top), &rc );
-	}
+        DrawUtils::ScaleColors( r, g, b, a );
+        
+        y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+        x = ScreenWidth / 5;
 
-	x += (m_hEmpty[m_enArmorType].rect.Width());
-	x = DrawUtils::DrawHudNumber( x, y, DHN_3DIGITS|DHN_DRAWZERO, m_iBat, r, g, b );
+        // make sure we have the right sprite handles
+        SPR_Set( m_hFull[m_enArmorType].spr, r, g, b );
+        SPR_DrawAdditive( 0, x, y, &m_hFull[m_enArmorType].rect );
 
-	return 1;
+        if( rc.bottom > rc.top )
+        {
+                SPR_Set( m_hEmpty[m_enArmorType].spr, r, g, b );
+                SPR_DrawAdditive( 0, x, y + (rc.top - m_hEmpty[m_enArmorType].rect.top), &rc );
+        }
+
+        x += (m_hEmpty[m_enArmorType].rect.Width());
+        x = DrawUtils::DrawHudNumber( x, y, DHN_3DIGITS|DHN_DRAWZERO, iDisplayBat, r, g, b );
+
+        return 1;
 }
 
 int CHudBattery::MsgFunc_ArmorType(const char *pszName,  int iSize, void *pbuf )
 {
-	BufferReader reader( pszName, pbuf, iSize );
+        BufferReader reader( pszName, pbuf, iSize );
 
-	m_enArmorType = (armortype_t)reader.ReadByte();
+        m_enArmorType = (armortype_t)reader.ReadByte();
 
-	return 1;
+        return 1;
 }
