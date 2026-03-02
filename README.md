@@ -9,6 +9,6 @@
 
 • **Added Manual Inspection!**
 
-• **Added Gyroscope Feature!** Fixed By NaruTo 1.6
+• **Added Gyroscope Feature With Sensitivity & Invert X & Y!** Fixed By NaruTo 1.6
 
 • **Added Transition For HUD (Health/Armor)**
